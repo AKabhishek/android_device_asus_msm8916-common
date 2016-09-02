@@ -65,6 +65,7 @@ public:
         return false;
     }
     inline virtual bool reportSv(QcomSvStatus &svStatus,
+    inline virtual bool reportSv(PnssSvStatus &svStatus,
                                  GpsLocationExtended &locationExtended,
                                  void* svExt) {
         return false;

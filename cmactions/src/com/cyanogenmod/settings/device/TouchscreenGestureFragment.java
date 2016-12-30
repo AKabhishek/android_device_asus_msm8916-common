@@ -26,7 +26,7 @@ import android.support.v7.preference.Preference;
 import android.provider.Settings;
 import android.view.ViewGroup;
 
-import cyanogenmod.providers.CMSettings;
+import com.android.internal.util.cm.ScreenType;
 
 public class TouchscreenGestureFragment extends PreferenceFragment {
 
@@ -72,8 +72,8 @@ public class TouchscreenGestureFragment extends PreferenceFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mHapticFeedback.setChecked(CMSettings.System.getInt(getContext().getContentResolver(),
-                CMSettings.System.TOUCHSCREEN_GESTURE_HAPTIC_FEEDBACK, 1) != 0);
+        mHapticFeedback.setChecked(Settings.System.getInt(getContext().getContentResolver(),
+                Settings.System.TOUCHSCREEN_GESTURE_HAPTIC_FEEDBACK, 1) != 0);
     }
 
     private boolean enableDoze(boolean enable) {
@@ -106,8 +106,8 @@ public class TouchscreenGestureFragment extends PreferenceFragment {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             final boolean value = (Boolean) newValue;
-            CMSettings.System.putInt(getContext().getContentResolver(),
-                    CMSettings.System.TOUCHSCREEN_GESTURE_HAPTIC_FEEDBACK, value ? 1 : 0);
+            Settings.System.putInt(getContext().getContentResolver(),
+                    Settings.System.TOUCHSCREEN_GESTURE_HAPTIC_FEEDBACK, value ? 1 : 0);
             return true;
         }
     };

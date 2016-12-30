@@ -46,8 +46,6 @@ import android.view.KeyEvent;
 import com.android.internal.os.DeviceKeyHandler;
 import com.android.internal.util.ArrayUtils;
 
-import cyanogenmod.providers.CMSettings;
-
 public class KeyHandler implements DeviceKeyHandler {
 
     private static final String TAG = KeyHandler.class.getSimpleName();
@@ -113,9 +111,9 @@ public class KeyHandler implements DeviceKeyHandler {
 
         final Resources resources = mContext.getResources();
         mProximityTimeOut = resources.getInteger(
-                org.cyanogenmod.platform.internal.R.integer.config_proximityCheckTimeout);
+                com.android.internal.R.integer.config_proximityCheckTimeout);
         mProximityWakeSupported = resources.getBoolean(
-                org.cyanogenmod.platform.internal.R.bool.config_proximityCheckOnWake);
+                com.android.internal.R.bool.config_proximityCheckOnWake);
 
         if (mProximityWakeSupported) {
             mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
@@ -174,7 +172,7 @@ public class KeyHandler implements DeviceKeyHandler {
             switch (msg.arg1) {
             case KEY_GESTURE_C:
                 mGestureWakeLock.acquire(GESTURE_WAKELOCK_DURATION);
-                Intent c_intent = new Intent(cyanogenmod.content.Intent.ACTION_SCREEN_CAMERA_GESTURE);
+                Intent c_intent = new Intent(android.content.Intent.ACTION_SCREEN_CAMERA_GESTURE);
                 mContext.sendBroadcast(c_intent, Manifest.permission.STATUS_BAR_SERVICE);
                 doHapticFeedback();
                 break;
@@ -245,9 +243,9 @@ public class KeyHandler implements DeviceKeyHandler {
         if (!mEventHandler.hasMessages(GESTURE_REQUEST)) {
             Message msg = getMessageForKeyEvent(event.getScanCode());
             boolean defaultProximity = mContext.getResources().getBoolean(
-                org.cyanogenmod.platform.internal.R.bool.config_proximityCheckOnWakeEnabledByDefault);
-            boolean proximityWakeCheckEnabled = CMSettings.System.getInt(mContext.getContentResolver(),
-                    CMSettings.System.PROXIMITY_ON_WAKE, defaultProximity ? 1 : 0) == 1;
+                com.android.internal.R.bool.config_proximityCheckOnWakeEnabledByDefault);
+            boolean proximityWakeCheckEnabled = Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.PROXIMITY_ON_WAKE, defaultProximity ? 1 : 0) == 1;
             if (mProximityWakeSupported && proximityWakeCheckEnabled && mProximitySensor != null) {
                 mEventHandler.sendMessageDelayed(msg, mProximityTimeOut);
                 processEvent(event.getScanCode());
@@ -302,19 +300,12 @@ public class KeyHandler implements DeviceKeyHandler {
     }
 
     private void doHapticFeedback() {
-        AudioManager audioManager = (AudioManager) mContext.getSystemService(
-                Context.AUDIO_SERVICE);
-
+       AudioManager audioManager = (AudioManager) mContext.getSystemService(
+               Context.AUDIO_SERVICE);
         if (mVibrator == null) {
             return;
         }
 
-        if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
-            boolean enabled = CMSettings.System.getInt(mContext.getContentResolver(),
-                    CMSettings.System.TOUCHSCREEN_GESTURE_HAPTIC_FEEDBACK, 1) != 0;
-            if (enabled) {
                 mVibrator.vibrate(50);
-            }
         }
     }
-}
